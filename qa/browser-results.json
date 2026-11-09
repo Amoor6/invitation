@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "width": 320,
+      "passed": true,
+      "image": "http://127.0.0.1:4173/images/couple-480.webp"
+    },
+    {
+      "width": 375,
+      "passed": true,
+      "image": "http://127.0.0.1:4173/images/couple-480.webp"
+    },
+    {
+      "width": 390,
+      "passed": true,
+      "image": "http://127.0.0.1:4173/images/couple-480.webp"
+    },
+    {
+      "width": 430,
+      "passed": true,
+      "image": "http://127.0.0.1:4173/images/couple-480.webp"
+    },
+    {
+      "width": 768,
+      "passed": true,
+      "image": "http://127.0.0.1:4173/images/couple-800.webp"
+    },
+    {
+      "width": 1440,
+      "passed": true,
+      "image": "http://127.0.0.1:4173/images/couple-800.webp"
+    }
+  ],
+  "errors": [],
+  "keyboard": true,
+  "reducedMotion": true
+}
