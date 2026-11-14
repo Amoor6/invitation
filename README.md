@@ -1,30 +1,25 @@
 # Armenian engagement invitation
 
-Local client preview. No deployment has been performed.
-
 ## Run
 
-Use Node 22.12+ and npm. Run `npm install`, then `npm run dev`.
-`npm run typecheck` checks strict TypeScript. `npm run build` checks types and creates the static `dist` directory. `npm run preview` serves that build locally.
+Node 22.12+ required. Run `npm install`, then `npm run dev`.
+`npm run build` type-checks and produces `dist`; `npm run preview` serves it.
 
-## Customize
+## Content
 
-Edit `src/config/invitation.ts`: names, initials, local event date, IANA timezone, venue, address, map URL, copy, photo and focal point. All supplied names/date are examples. Armenian copy requires fluent-speaker/client approval. Set `preview` false after approval. Update the page title and metadata in `index.html`.
+Edit `src/config/invitation.ts` for Armenian copy, names, portrait and event date.
+The event is December 22, 2026 at 19:00 in Asia/Tehran. The supplied hall placeholder remains in the invitation text.
+The countdown uses Temporal with DST ambiguity rejection and stops at zero.
 
-The date is a local wall-clock time in the configured timezone. Temporal resolves its UTC instant and rejects ambiguous or nonexistent DST times. Countdown stops at zero. For such a DST time, choose an unambiguous local time before building.
+## Design and assets
 
-Replace the WebP photograph variants in `public/images` (480, 800, 1145 pixels wide). Preserve aspect ratio and adjust focalPoint as needed. Update the srcSet if filenames change. Only resizing/compression was applied to the supplied photograph.
+Warm garden scenery, champagne stationery and pale floral details. Three active images are documented in `public/images/ASSETS.md`. The favicon is a small SVG envelope. Fonts are locally hosted. CSS handles envelope animation; Motion handles reveals. Reduced-motion preferences are respected.
 
-## Design
+## Validation
 
-Ivory paper, champagne, antique gold, locally hosted Armenian Noto Serif and Latin Cormorant Garamond. Lightweight geometric ornaments are contemporary decorative interpretations, not reproductions of historic Armenian artifacts. CSS perspective handles the envelope; Motion handles viewport reveals. Reduced-motion users skip the opening sequence. No backend, forms, tracking or runtime external APIs.
+Run `npm run typecheck` and `npm run build`. Historical screenshots and obsolete browser scripts were removed because they described an earlier layout and event date. Current browser visual verification is pending.
 
-## Cloudflare Pages
+## Hosting
 
-Push the project to your chosen Git repository and create a Cloudflare Pages project. Build command: `npm run build`. Output directory: `dist`. Production needs no Node server. Alternatively upload the built dist folder through Pages Direct Upload. Deployment requires explicit approval and is intentionally not automated here.
-
-`noindex` discourages indexing; it does not provide privacy or access control. Anyone with the deployed URL may view the invitation.
-
-## Verification status
-
-Clean installation, strict TypeScript, production build and Chromium browser checks passed. See [QA report](qa/REPORT.md) for evidence, Lighthouse scores, screenshots and remaining limitations. The build is ready for a sample-content client preview; Armenian copy and actual event details still need approval. No deployment performed.
+Static output is in `dist`. No backend, tracking or external runtime API is needed.
+The page includes `noindex`, which discourages search indexing but does not provide access control.
