@@ -35,7 +35,22 @@ def centered(text,y,f,color):
  box=d.textbbox((0,0),text,font=f);width=box[2]-box[0]
  assert width<940*S
  d.text(((W*S-width)/2,y*S-box[1]),text,font=f,fill=color)
-centered('Բ · Ա',130,font(armenian,32),'#826343')
+# The Armenian subset has no U+00B7. Use the same family's Latin
+# subset for that separator only. Preserve the original glyph advances,
+# baseline and overall bounds so neither Armenian initial moves.
+initials = 'Բ · Ա'
+f = font(armenian,32)
+separator_font = font('noto-serif-armenian/files/noto-serif-armenian-latin-400-normal.woff',32)
+assert bytes(separator_font.getmask('·')) != bytes(separator_font.getmask('\uffff')), 'Missing middle-dot glyph'
+box = d.textbbox((0,0),initials,font=f)
+x = (W*S-(box[2]-box[0]))/2
+y = 130*S-box[1]
+d.text((x,y),'Բ ',font=f,fill='#826343')
+separator_x = x+d.textlength('Բ ',font=f)
+separator_width = d.textlength('·',font=f)
+d.text((separator_x+(separator_width-d.textlength('·',font=separator_font))/2,
+        y+f.getmetrics()[0]),'·',font=separator_font,fill='#826343',anchor='ls')
+d.text((x+d.textlength('Բ ·',font=f),y),' Ա',font=f,fill='#826343')
 centered('Biayna & Adrik',231,font(latin,104),'#59452e')
 d.line((552*S,366*S,582*S,366*S),fill='#ad8c5b',width=S)
 d.polygon([(600*S,361*S),(605*S,366*S),(600*S,371*S),(595*S,366*S)],outline='#ad8c5b')
