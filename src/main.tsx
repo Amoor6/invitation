@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {motion, useReducedMotion} from 'motion/react';
-import {ArrowDown} from 'lucide-react';
+import {ArrowDown, CalendarDays, MapPin} from 'lucide-react';
 import {Temporal} from '@js-temporal/polyfill';
 import '@fontsource/noto-serif-armenian/armenian-400.css';
 import '@fontsource/cormorant-garamond/latin-400.css';
@@ -12,21 +12,44 @@ const event = Temporal.PlainDateTime.from(c.date).toZonedDateTime(c.timezone,{di
 const date = new Date(Number(event.epochMilliseconds));
 const monthName = ['հունվար','փետրվար','մարտ','ապրիլ','մայիս','հունիս','հուլիս','օգոստոս','սեպտեմբեր','հոկտեմբեր','նոյեմբեր','դեկտեմբեր'][event.month-1];
 const weekdayName = ['երկուշաբթի','երեքշաբթի','չորեքշաբթի','հինգշաբթի','ուրբաթ','շաբաթ','կիրակի'][event.dayOfWeek-1];
-function Ornament(){return <svg aria-hidden="true" viewBox="0 0 160 36" className="ornament"><path d="M0 18h46m68 0h46M58 18l22-14 22 14-22 14zM68 18l12-7 12 7-12 7zM48 18l8-6m-8 6 8 6m56-6-8-6m8 6-8 6" fill="none" stroke="currentColor" strokeWidth=".8"/></svg>}
-function Flowers(){return <svg className="flowers" aria-hidden="true" viewBox="0 0 240 260" fill="none">
-<g stroke="#808b72" strokeWidth="1.4" strokeLinecap="round"><path d="M108 248C112 192 102 143 84 83M110 230C133 189 155 153 167 111M109 208C85 185 62 169 42 151"/>
-<path d="M109 207C88 202 73 187 73 167C94 171 109 186 109 207Z" fill="#a6b098"/><path d="M113 219C131 215 147 199 150 179C129 184 117 200 113 219Z" fill="#b7bda6"/><path d="M104 170C84 159 79 143 83 129C99 141 106 153 104 170Z" fill="#b7bda6"/><path d="M138 174C157 172 170 159 175 142C155 145 143 157 138 174Z" fill="#a6b098"/><path d="M75 181C57 185 41 176 33 164C52 162 64 168 75 181Z" fill="#c3c7b2"/>
-<path d="M108 207 79 176M115 216 144 188M104 169 86 137M139 173 168 149M74 180 41 167" stroke="#7e896f" strokeWidth=".7"/></g>
-<g transform="translate(83 82) rotate(-18)" stroke="#bd8a94" strokeWidth=".85" strokeLinejoin="round">
-<path d="M0 24C-20 16-47-4-38-34C-21-37-4-19 0 0C4-23 17-41 31-38C46-16 25 14 0 24Z" fill="#edc3cd"/>
-<path d="M0 25C-30 18-56-3-49-22C-29-22-9-10 0 8C12-12 33-22 49-17C50 4 27 23 0 25Z" fill="#f3d8dd"/>
-<path d="M0 25C-17 6-24-23-9-43C9-37 20-10 0 25Z" fill="#f8e5e7"/>
-<path d="M-39-18Q-19 1-5 17M-29-29Q-20-4-7 12M-8-32Q3-12 0 16M33-29Q18-5 10 10M39-12Q20 0 9 17" stroke="#cf9eaa" strokeWidth=".65"/>
-<path d="M-12 22Q0 34 13 21L5 34-4 34Z" fill="#96a184" stroke="#879576"/></g>
-<g transform="translate(168 111) rotate(27) scale(.72)" stroke="#bd8a94" strokeWidth="1"><path d="M0 24C-25 6-34-19-21-36C-7-30 1-14 0 0C7-22 22-33 31-29C39-8 23 17 0 24Z" fill="#e9bdc8"/><path d="M0 24C-26 17-43-2-37-18C-18-15-7-2 0 10C10-8 26-16 38-11C37 7 20 22 0 24Z" fill="#f4dce0"/><path d="M0 23C-12 3-14-21-3-34C12-25 15-3 0 23Z" fill="#fae9e9"/><path d="M-27-12-5 16M-3-25 0 15M27-7 8 16" stroke="#d3a6af" strokeWidth=".7"/><path d="M-10 23Q0 32 12 22L4 33-3 32Z" fill="#96a184" stroke="#879576"/></g>
-<g transform="translate(42 151) rotate(-48)" stroke="#bc8c97" strokeWidth=".8"><path d="M0 11C-20 2-19-18-8-29C6-24 17-6 0 11Z" fill="#edc8d0"/><path d="M0 11Q-10-10-8-24M0 11Q8-5 3-16"/><path d="M-7 8 0 18 7 8" stroke="#879576" fill="#a6b098"/></g>
-</svg>}
+function Ornament(){return <svg aria-hidden="true" viewBox="0 0 180 36" className="ornament"><path d="M4 18h50m72 0h50M64 18l26-13 26 13-26 13zM74 18l16-8 16 8-16 8zM54 18l8-5m-8 5 8 5m64-5-8-5m8 5-8 5" fill="none" stroke="currentColor" strokeWidth=".85"/><circle cx="90" cy="18" r="2" fill="currentColor"/></svg>}
 function Reveal({children,className=''}:{children:React.ReactNode,className?:string}){const reduce=useReducedMotion();return <motion.div className={className} initial={reduce?false:{opacity:0,y:22}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{duration:.9}}>{children}</motion.div>}
 function Countdown(){const [remaining,setRemaining]=useState(()=>Math.max(0,Number(event.epochMilliseconds)-Date.now()));useEffect(()=>{const id=setInterval(()=>{const n=Math.max(0,Number(event.epochMilliseconds)-Date.now());setRemaining(n);if(!n)clearInterval(id)},1000);return()=>clearInterval(id)},[]);const s=Math.floor(remaining/1000);return <section className="countdown"><Reveal><h2>Մինչ մեր գեղեցիկ օրը</h2>{remaining>0?<div className="digits" role="timer" aria-label="Մնացած ժամանակը">{[Math.floor(s/86400),Math.floor(s/3600)%24,Math.floor(s/60)%60,s%60].map((v,i)=><div key={i}><span>{String(v).padStart(2,'0')}</span><small>{['օր','ժամ','րոպե','վայրկյան'][i]}</small></div>)}</div>:<p>{c.celebration}</p>}</Reveal></section>}
-function App(){const [phase,setPhase]=useState<'closed'|'opening'|'open'>('closed');const reduce=useReducedMotion();const heading=useRef<HTMLHeadingElement>(null);useEffect(()=>{if(phase==='opening'){const id=setTimeout(()=>setPhase('open'),2100);return()=>clearTimeout(id)}if(phase==='open')heading.current?.focus()},[phase]);return <>{phase!=='open'?<main className="intro"><Flowers/><button className={`envelope ${phase}`} disabled={phase==='opening'} onClick={()=>setPhase(reduce?'open':'opening')} aria-label={`${c.initials} — Մեր պատմության նոր էջը — Բացել հրավերը`}><span className="letter"><Ornament/><span>{c.initials}</span><small>Մեր պատմության նոր էջը</small></span><span className="pocket"/><span className="flap"/><span className="seal">{c.initials}</span></button><div className="intro-copy"><h1>Ձեզ համար՝ սիրով</h1><p>Հպվեք ծրարին՝ հրավերը բացելու համար</p></div>{c.preview&&<small className="preview">Նախադիտում · Օրինակային տվյալներ</small>}</main>:<main><header><span>{c.initials}</span><span>ՆՇԱՆԱԴՐՈՒԹՅՈՒՆ</span><span>{new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'2-digit',year:'2-digit',timeZone:c.timezone}).format(date)}</span></header><section className="hero"><div className="hero-copy"><Reveal><Ornament/><h1 ref={heading} tabIndex={-1}>{c.names.armenian[0]}<em>և</em>{c.names.armenian[1]}</h1><div className="rule"/><p className="occasion">Մենք նշանադրվում ենք</p><p className="hero-date">{`${event.day} ${monthName} · ${event.year}`}</p></Reveal></div><Reveal className="portrait-wrap"><div className="portrait-border"><img src={c.image} srcSet="/images/couple-480.webp 480w, /images/couple-800.webp 800w, /images/couple-1145.webp 1145w" sizes="(min-width: 800px) 48vw, 90vw" style={{objectPosition:c.focalPoint}} width="1145" height="1374" alt="Զույգի տրամադրված լուսանկարը"/></div></Reveal><a className="scroll" href="#invitation" aria-label="Կարդալ հրավերը"><ArrowDown size={18}/></a></section><section id="invitation" className="message"><Reveal><Ornament/><p className="message-text">{c.message}</p><small className="draft">Հայերեն տեքստի նախագիծ՝ հաստատման համար</small></Reveal></section><section className="details"><Reveal className="date-block"><span className="big-day">{event.day}</span><h2>{monthName} · {event.year}</h2><p>{weekdayName}</p><time dateTime={event.toInstant().toString()}>{new Intl.DateTimeFormat('hy',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:c.timezone}).format(date)}</time></Reveal><Reveal className="venue"><Flowers/><h2>{c.venue}</h2><p>{c.address}</p></Reveal></section><Countdown/><footer><Reveal><Flowers/><Ornament/><p>{c.closing}</p><div className="closing-names">{c.names.armenian.join(' և ')}</div>{c.preview&&<small className="draft">Հաճախորդի նախադիտում · Միջոցառման մանրամասները՝ հաստատման ենթակա</small>}</Reveal></footer></main>}</>};
+function EnvelopePocket(){return <svg className="pocket" aria-hidden="true" viewBox="0 0 430 280" preserveAspectRatio="none">
+<defs>
+<linearGradient id="pocketLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stopColor="#edddc2"/>
+<stop offset="100%" stopColor="#dfcba9"/>
+</linearGradient>
+<linearGradient id="pocketRight" x1="100%" y1="0%" x2="0%" y2="100%">
+<stop offset="0%" stopColor="#ebd9ba"/>
+<stop offset="100%" stopColor="#dcc6a2"/>
+</linearGradient>
+<linearGradient id="pocketBottom" x1="50%" y1="0%" x2="50%" y2="100%">
+<stop offset="0%" stopColor="#f0e0c4"/>
+<stop offset="100%" stopColor="#dfcba9"/>
+</linearGradient>
+</defs>
+{/* Subtle shadow along the V throat edge */}
+<path d="M0 2L215 170L430 2" fill="none" stroke="rgba(96,64,52,0.14)" strokeWidth="3"/>
+{/* Left and right side folds */}
+<path d="M0 0L215 168L0 280Z" fill="url(#pocketLeft)" stroke="#dfd0be" strokeWidth=".8"/>
+<path d="M430 0L215 168L430 280Z" fill="url(#pocketRight)" stroke="#dfd0be" strokeWidth=".8"/>
+{/* Soft diagonal crease shadow under bottom fold */}
+<path d="M0 280L200 150Q215 140 230 150L430 280Z" fill="rgba(110,78,60,0.08)" transform="translate(0 -2)"/>
+{/* Bottom overlapping fold */}
+<path d="M0 280L200 152Q215 142 230 152L430 280Z" fill="url(#pocketBottom)" stroke="#e6d7c6" strokeWidth=".9"/>
+</svg>}
+function EnvelopeFlap(){return <svg className="flap" aria-hidden="true" viewBox="0 0 430 174" preserveAspectRatio="none">
+<defs>
+<linearGradient id="flapGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+<stop offset="0%" stopColor="#efdfc3"/>
+<stop offset="70%" stopColor="#e7d3b1"/>
+<stop offset="100%" stopColor="#ddc5a0"/>
+</linearGradient>
+</defs>
+<path d="M0 0L430 0L229 162Q215 172 201 162Z" fill="url(#flapGrad)" stroke="#decbb8" strokeWidth="1"/>
+<path d="M22 4L215 151L408 4" fill="none" stroke="rgba(164,124,114,0.28)" strokeWidth=".9" strokeDasharray="3 2"/>
+</svg>}
+function App(){const [phase,setPhase]=useState<'closed'|'opening'|'open'>('closed');const reduce=useReducedMotion();const heading=useRef<HTMLHeadingElement>(null);useEffect(()=>{if(phase==='opening'){const id=setTimeout(()=>setPhase('open'),2250);return()=>clearTimeout(id)}if(phase==='open')heading.current?.focus()},[phase]);return <>{phase!=='open'?<main className={`intro ${phase}`}><button className={`envelope ${phase}`} disabled={phase==='opening'} onClick={()=>setPhase(reduce?'open':'opening')} aria-label={`${c.initials} — Մեր պատմության նոր էջը — Բացել հրավերը`}><span className="envelope-back"/><span className="letter"><span className="letter-frame"><Ornament/><span className="letter-initials">{c.initials}</span><span className="letter-names">{c.names.armenian.join(' և ')}</span><small>Մեր պատմության նոր էջը</small></span></span><EnvelopePocket/><EnvelopeFlap/><span className="seal"><span className="seal-ring">{c.initials}</span></span></button><div className="intro-copy"><h1>Ձեզ համար՝ սիրով</h1><p>Հպվեք ծրարին՝ հրավերը բացելու համար</p></div>{c.preview&&<small className="preview">Նախադիտում · Օրինակային տվյալներ</small>}</main>:<motion.main className="page" initial={reduce?false:{opacity:0}} animate={{opacity:1}} transition={{duration:.75,ease:'easeOut'}}><header><span>{c.initials}</span><span>ՆՇԱՆԱԴՐՈՒԹՅՈՒՆ</span><span>{new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'2-digit',year:'2-digit',timeZone:c.timezone}).format(date)}</span></header><section className="hero"><div className="hero-copy"><Reveal><Ornament/><h1 ref={heading} tabIndex={-1}><span>{c.names.armenian[0]}</span><em>և</em><span>{c.names.armenian[1]}</span></h1><div className="rule"/><p className="occasion">Մենք նշանադրվում ենք</p><p className="hero-date">{`${event.day} ${monthName} · ${event.year}`}</p></Reveal></div><Reveal className="portrait-wrap"><div className="portrait-border"><img src={c.image} style={{objectPosition:c.focalPoint}} width="1024" height="1536" alt="Զույգի տրամադրված լուսանկարը"/></div></Reveal><a className="scroll" href="#invitation" aria-label="Կարդալ հրավերը"><ArrowDown size={18}/></a></section><section id="invitation" className="invitation-section" aria-label="Նշանադրության հրավեր"><Reveal className="invitation-card"><div className="card-content"><p className="card-eyebrow">Սիրով հրավիրում ենք</p><h2 className="card-names"><span>{c.names.armenian[0]}</span><em>և</em><span>{c.names.armenian[1]}</span></h2><p className="card-occasion">Մեր նշանադրությանը</p><p className="card-message">{c.message}</p><div className="card-details"><div><CalendarDays aria-hidden="true"/><p>{`${event.day} ${monthName}`}</p><p>{event.year} · {weekdayName}</p><time dateTime={event.toInstant().toString()}>{new Intl.DateTimeFormat('hy',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:c.timezone}).format(date)}</time></div><div><MapPin aria-hidden="true"/><p>{c.venue}</p><p>{c.address}</p></div></div><p className="card-closing">{c.closing}</p></div></Reveal></section><Countdown/><footer className="compact-footer"><p>{c.names.armenian.join(' և ')} · {event.year}</p>{c.preview&&<small className="draft">Նախադիտում · Միջոցառման մանրամասները՝ հաստատման ենթակա</small>}</footer></motion.main>}</>};
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
