@@ -3,17 +3,16 @@ import { createRoot } from 'react-dom/client';
 import { motion, useReducedMotion } from 'motion/react';
 import {
   ArrowDown,
-  CalendarDays,
   Hand,
-  MapPin,
   Music,
-  Pause,
-  Volume2,
-  VolumeX,
 } from 'lucide-react';
 import { Temporal } from '@js-temporal/polyfill';
+import '@fontsource/noto-serif-armenian/armenian-300.css';
 import '@fontsource/noto-serif-armenian/armenian-400.css';
+import '@fontsource/noto-serif-armenian/armenian-500.css';
+import '@fontsource/noto-serif-armenian/armenian-600.css';
 import '@fontsource/cormorant-garamond/latin-400.css';
+import '@fontsource/cormorant-garamond/latin-500.css';
 import { invitation as c } from './config/invitation';
 import './style.css';
 
@@ -46,6 +45,25 @@ function Ornament() {
         strokeWidth=".85"
       />
       <circle cx="90" cy="18" r="2" fill="currentColor" />
+    </svg>
+  );
+}
+
+function CardGeometricFrame() {
+  return (
+    <svg
+      className="card-geo-frame"
+      aria-hidden="true"
+      viewBox="0 0 600 800"
+      preserveAspectRatio="none"
+    >
+      <polygon
+        points="36,12 564,12 588,36 588,764 564,788 36,788 12,764 12,36"
+        fill="none"
+        stroke="rgba(206, 128, 146, 0.34)"
+        strokeWidth="1"
+        vectorEffect="non-scaling-stroke"
+      />
     </svg>
   );
 }
@@ -215,22 +233,20 @@ function AudioControl({
       aria-pressed={isPlaying}
       aria-label={isPlaying ? 'Դադարեցնել երաժշտությունը' : 'Միացնել երաժշտությունը'}
     >
-      <span className="audio-icon" aria-hidden="true">
-        {isPlaying ? <Volume2 size={17} strokeWidth={1.6} /> : <Music size={17} strokeWidth={1.6} />}
-      </span>
-      <span className="audio-bars" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </span>
+      {isPlaying ? (
+        <span className="audio-bars" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
+      ) : (
+        <span className="audio-icon" aria-hidden="true">
+          <Music size={15} strokeWidth={1.6} />
+        </span>
+      )}
       <span className="audio-label">
         {isPlaying ? 'Դադար' : 'Երաժշտություն'}
       </span>
-      {isPlaying ? (
-        <Pause size={13} strokeWidth={1.8} className="audio-state-icon" aria-hidden="true" />
-      ) : (
-        <VolumeX size={13} strokeWidth={1.8} className="audio-state-icon" aria-hidden="true" />
-      )}
     </button>
   );
 }
@@ -367,7 +383,6 @@ function App() {
         >
           <header>
             <span>{c.initials}</span>
-            <span>ՆՇԱՆԱԴՐՈՒԹՅՈՒՆ</span>
             <span>
               {new Intl.DateTimeFormat('en-GB', {
                 day: '2-digit',
@@ -388,7 +403,6 @@ function App() {
                   <span>{c.names.armenian[1]}</span>
                 </h1>
                 <div className="rule" />
-                <p className="occasion">Մենք նշանադրվում ենք</p>
                 <p className="hero-date">{`${event.day} ${monthName} · ${event.year}`}</p>
               </Reveal>
             </div>
@@ -415,41 +429,33 @@ function App() {
           <section
             id="invitation"
             className="invitation-section"
-            aria-label="Նշանադրության հրավեր"
+            aria-label="Հրավեր"
           >
             <Reveal className="invitation-card">
+              <CardGeometricFrame />
               <div className="card-content">
                 <p className="card-introduction">{c.introduction}</p>
-                <h2 className="card-names">
-                  <span>Բիայնաի</span>
-                  <em>եւ</em>
-                  <span>Ադրիկի</span>
-                </h2>
-                <p className="card-message">{c.message}</p>
-                <p className="card-message-venue">{c.messageVenue}</p>
 
-                <div className="card-details">
-                  <div className="detail-box">
-                    <CalendarDays
-                      aria-hidden="true"
-                      size={24}
-                      strokeWidth={1.3}
-                    />
-                    <p className="detail-label">Օր եւ ժամ</p>
-                    <p className="detail-primary">
-                      {event.day} դեկտեմբերի {event.year}
-                    </p>
-                    <p className="detail-secondary">երեքշաբթի · 19։00</p>
-                  </div>
-                  <div className="detail-box">
-                    <MapPin aria-hidden="true" size={24} strokeWidth={1.3} />
-                    <p className="detail-label">Վայր</p>
-                    <p className="detail-primary">{c.venue}</p>
-                    <p className="detail-secondary">{c.hall}</p>
-                  </div>
+                <h2 className="card-names">
+                  <span>{c.invitationNames[0]}</span>
+                  <em>եւ</em>
+                  <span>{c.invitationNames[1]}</span>
+                </h2>
+
+                <p className="card-event-lead">{c.eventLead}</p>
+                <p className="card-weekday">{c.weekday}</p>
+
+                <div className="card-date-strip">
+                  <span className="card-date-month">{c.monthLabel}</span>
+                  <span className="card-date-day">{c.dayLabel}</span>
+                  <span className="card-date-year">{c.yearLabel}</span>
                 </div>
 
+                <p className="card-time">{c.timeLabel}</p>
+                <p className="card-venue">{c.venueLine}</p>
                 <p className="card-closing">{c.closing}</p>
+
+                <div className="card-divider" aria-hidden="true" />
 
                 <div className="card-signature">
                   <p className="card-signature-lead">{c.signatureLead}</p>
